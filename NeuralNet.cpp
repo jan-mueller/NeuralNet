@@ -9,60 +9,6 @@ using namespace std;
 
 ANN_ERROR::file_exception::file_exception(const char* q){ p=q; }
 
-//Public Methoden
-
-void NeuralNet::setZero(){
-
-}
-void NeuralNet::mem_alloc(int input, int hidden, int output){
-	//Dimensionen des Netzes speichern
-	amountI=input; amountH=hidden; amountO=output;
-	//erstellen der Gewichtungsmatrix
-	ihWeight=new float*[amountI+1];
-	for(int i=0; i<=amountI; i++)
-		ihWeight[i]=new float[amountH];
-	hoWeight=new float*[amountH+1];
-	for(int i=0; i<=amountH; i++)
-		hoWeight[i]=new float[amountO];
-	//erstellen der Matrix für die Gewichtungsunterschiede
-	ihWeightDelta=new float*[amountI+1];
-	for(int i=0; i<=amountI; i++)
-		ihWeightDelta[i]=new float[amountH];
-	hoWeightDelta=new float*[amountH+1];
-	for(int i=0; i<=amountH; i++)
-		hoWeightDelta[i]=new float[amountO];
-	//Speicher allozieren für die restlichen Arrays
-	preferenceO=new float[amountO];
-	inputI=new float[amountI];
-	inputH=new float[amountH];
-	inputO=new float[amountO];
-	outputI=new float[amountI+1];
-	outputH=new float[amountH+1];
-	outputO=new float[amountO];
-	errorH=new float[amountH+1];
-	errorO=new float[amountO];
-	differenceO=new float[amountO];
-	//differenceO bereitmachen für die getE()
-	for(int i=0; i<amountO; i++)
-		differenceO[i]=0.0;
-	//Gewichtungsunterschiedmatrix auf Startwert setzen
-	for(int i=0; i<=amountI; i++)
-		for(int j=0; j<amountH; j++)
-				ihWeightDelta[i][j]=0.0;
-	for(int i=0; i<=amountH; i++)
-		for(int j=0; j<amountO; j++)
-				hoWeightDelta[i][j]=0.0;
-	//Default Lern Rate setzen
-	learnRate=2.0;
-	//Default Fehler Toleranz setzen
-	errorTolerance=0.1;
-	//Default Impuls Rate setzen
-	impuls=0.4;
-}
-void NeuralNet::backprop(){
-
-}
-
 //Private Methoden
 
 NeuralNet::NeuralNet(int input, int hidden, int output){
@@ -156,5 +102,59 @@ float *NeuralNet::run(float *input){
 
 }
 bool NeuralNet::train(float *input, float *outputPointer){
+
+}
+
+//Public Methoden
+
+void NeuralNet::setZero(){
+
+}
+void NeuralNet::mem_alloc(int input, int hidden, int output){
+	//Dimensionen des Netzes speichern
+	amountI=input; amountH=hidden; amountO=output;
+	//erstellen der Gewichtungsmatrix
+	ihWeight=new float*[amountI+1];
+	for(int i=0; i<=amountI; i++)
+		ihWeight[i]=new float[amountH];
+	hoWeight=new float*[amountH+1];
+	for(int i=0; i<=amountH; i++)
+		hoWeight[i]=new float[amountO];
+	//erstellen der Matrix für die Gewichtungsunterschiede
+	ihWeightDelta=new float*[amountI+1];
+	for(int i=0; i<=amountI; i++)
+		ihWeightDelta[i]=new float[amountH];
+	hoWeightDelta=new float*[amountH+1];
+	for(int i=0; i<=amountH; i++)
+		hoWeightDelta[i]=new float[amountO];
+	//Speicher allozieren für die restlichen Arrays
+	preferenceO=new float[amountO];
+	inputI=new float[amountI];
+	inputH=new float[amountH];
+	inputO=new float[amountO];
+	outputI=new float[amountI+1];
+	outputH=new float[amountH+1];
+	outputO=new float[amountO];
+	errorH=new float[amountH+1];
+	errorO=new float[amountO];
+	differenceO=new float[amountO];
+	//differenceO bereitmachen für die getE()
+	for(int i=0; i<amountO; i++)
+		differenceO[i]=0.0;
+	//Gewichtungsunterschiedmatrix auf Startwert setzen
+	for(int i=0; i<=amountI; i++)
+		for(int j=0; j<amountH; j++)
+				ihWeightDelta[i][j]=0.0;
+	for(int i=0; i<=amountH; i++)
+		for(int j=0; j<amountO; j++)
+				hoWeightDelta[i][j]=0.0;
+	//Default Lern Rate setzen
+	learnRate=2.0;
+	//Default Fehler Toleranz setzen
+	errorTolerance=0.1;
+	//Default Impuls Rate setzen
+	impuls=0.4;
+}
+void NeuralNet::backprop(){
 
 }
