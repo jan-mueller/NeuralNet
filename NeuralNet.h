@@ -14,7 +14,7 @@ private:
 	float **ihWeightDelta, **hoWeightDelta;
 	float *inputI, *inputH, *inputO;
 	float *outputI, *outputH, *outputO;
-	float *errorH, *errorO, *preferedO, *differenceO;
+	float *errorH, *errorO, *preferenceO, *differenceO;
 	int amountI, amountH, amountO;
 	float errorTolerance, learnRate, impuls;
 	void setZero();

@@ -15,7 +15,49 @@ void NeuralNet::setZero(){
 
 }
 void NeuralNet::mem_alloc(int input, int hidden, int output){
-
+	//save dimensions of the net
+	amountI=input; amountH=hidden; amountO=output;
+	//create weight matrices
+	ihWeight=new float*[amountI+1];
+	for(int i=0; i<=amountI; i++)
+		ihWeight[i]=new float[amountH];
+	hoWeight=new float*[amountH+1];
+	for(int i=0; i<=amountH; i++)
+		hoWeight[i]=new float[amountO];
+	//create weight difference matrices
+	ihWeightDelta=new float*[amountI+1];
+	for(int i=0; i<=amountI; i++)
+		ihWeightDelta[i]=new float[amountH];
+	hoWeightDelta=new float*[amountH+1];
+	for(int i=0; i<=amountH; i++)
+		hoWeightDelta[i]=new float[amountO];
+	//allocate memory for other matrices
+	preferenceO=new float[amountO];
+	inputI=new float[amountI];
+	inputH=new float[amountH];
+	inputO=new float[amountO];
+	outputI=new float[amountI+1];
+	outputH=new float[amountH+1];
+	outputO=new float[amountO];
+	errorH=new float[amountH+1];
+	errorO=new float[amountO];
+	differenceO=new float[amountO];
+	//bring differenceO in valid state for getE()
+	for(int i=0; i<amountO; i++)
+		differenceO[i]=0.0;
+	//set delta matrices to 0 (start value)
+	for(int i=0; i<=amountI; i++)
+		for(int j=0; j<amountH; j++)
+				ihWeightDelta[i][j]=0.0;
+	for(int i=0; i<=amountH; i++)
+		for(int j=0; j<amountO; j++)
+				hoWeightDelta[i][j]=0.0;
+	//setting default learning rate
+	learnRate=2.0;
+	//setting default error tolerance
+	errorTolerance=0.1;
+	//setting default impuls rate
+	impuls=0.4;
 }
 void NeuralNet::backprop(){
 
