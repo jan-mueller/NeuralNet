@@ -106,25 +106,65 @@ NeuralNet::~NeuralNet(){
 	delete[] ihWeightDelta; delete[] hoWeightDelta;
 }
 bool NeuralNet::saveWeightsToFile(char *file){
-
+	ofstream out(file);
+	if(!out){
+		throw ANN_ERROR::file_exception("Error opening file");
+		return false;
+	}
+	//throw exception on output failing
+	out.exceptions(ios_base::failbit|ios_base::badbit|ios_base::eofbit);
+	try{
+		out<<amountI<<endl;
+		out<<amountH<<endl;
+		out<<amountO<<endl;
+	}
+	catch(ios_base::failure &){
+		throw ANN_ERROR::file_exception("Error writing weight matrix dimensions");
+		return false;
+	}
+	for(int i=0; i<=amountI; i++)
+		for(int j=0; j<amountH; j++){
+			try{
+				out<<ihWeight[i][j]<<endl;
+			}
+			catch(ios_base::failure &){
+				throw ANN_ERROR::file_exception("Error writing input-hidden weight matrix");
+				return false;
+			}
+		}
+	for(int i=0; i<=amountH; i++)
+		for(int j=0; j<amountO; j++){
+			try{
+				out<<hoWeight[i][j]<<endl;
+			}
+			catch(ios_base::failure &){
+				throw ANN_ERROR::file_exception("Error writing hidden-output weight matrix");
+				return false;
+			}
+		}
+	 out.close();
+	 return true;
 }
 float NeuralNet::calculateError() {
-
+	float quad=0;
+	for(int i=0; i<amountO; i++)
+		quad+=differenceO[i]*differenceO[i];
+	return quad;
 }
 float *NeuralNet::getOutput() {
-
+	return outputO;
 }
 float *NeuralNet::getOutputDifference() {
-
+	return differenceO;
 }
 void NeuralNet::setErrorTolerance(float tolerance) {
-
+	errorTolerance=tolerance;
 }
 void NeuralNet::setLearnRate(float rate) {
-
+	learnRate=rate;
 }
 void NeuralNet::setImpuls(float impuls) {
-
+	this->impuls=impuls;
 }
 float *NeuralNet::run(float *input) {
 
@@ -181,7 +221,7 @@ void NeuralNet::mem_alloc(int input, int hidden, int output){
 	errorH = new float[amountH + 1];
 	errorO = new float[amountO];
 	differenceO = new float[amountO];
-	//differenceO bereitmachen für die getE()
+	//differenceO bereitmachen für calculateError()
 	for (int i = 0; i < amountO; i++)
 		differenceO[i] = 0.0;
 	//Gewichtungsunterschiedmatrix auf Startwert setzen
