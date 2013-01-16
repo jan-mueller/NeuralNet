@@ -2,7 +2,7 @@
 #include <iomanip>
 #include <stdio.h>
 #include "NeuralNet.h"
-#include "pattern.h"
+#include "helper.h"
 
 using namespace std;
 
@@ -12,6 +12,11 @@ int main(int argc, char** argv){
 	float *output;
 	char *percO=new char[20];
 	int recog[10];
+
+	float **trainI = generateAsciiArray("trainI", 10, 9, 7);
+	float **testI = generateAsciiArray("testI", 10, 9, 7);
+	float **trainO = generateAsciiArray("trainO", 10, 1, 9);
+
 	NeuralNet knn(iL,hL,oL);
 //	NeuralNet knn("lern_10000_hl64");
 	int n;
@@ -46,16 +51,15 @@ int main(int argc, char** argv){
 		}
 	}
 
-	knn.saveWeightsToFile("lern_50_hl6");
+//	knn.saveWeightsToFile("lern_50_hl6");
 	cout << "\n\n";
 	for(int i=0; i<10; i++){                     //test outputs
 		cout << "=> The falsified " << i << " has been recognized as " << recog[i]+1 << ".\n";
 	}
 	cout << "\n\n";
 	return 0;
-
-
 }
+
 
 
 
