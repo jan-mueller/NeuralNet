@@ -8,7 +8,6 @@
 
 using namespace std;
 
-ANN_ERROR::file_exception::file_exception(const char* q){p = q;}
 
 //Private Methoden
 

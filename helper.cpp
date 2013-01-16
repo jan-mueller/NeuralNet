@@ -1,5 +1,5 @@
 #include "helper.h"
-
+ANN_ERROR::file_exception::file_exception(const char* q){p = q;}
 
 float **generateAsciiArray(char* file, int amount, int height, int width){
 	float **array;
