@@ -1,7 +1,6 @@
 #include <iostream>
 #include <iomanip>
 #include <stdio.h>
-#include <stdlib.h>
 #include "NeuralNet.h"
 #include "pattern.h"
 
@@ -14,6 +13,7 @@ int main(int argc, char** argv){
 	char *percO=new char[20];
 	int recog[10];
 	NeuralNet knn(iL,hL,oL);
+//	NeuralNet knn("lern_10000_hl64");
 	int n;
 
 	cout << "Training over how much epoches?: "; cin >> n;
@@ -45,13 +45,13 @@ int main(int argc, char** argv){
 				cout << percO;
 		}
 	}
+
+	knn.saveWeightsToFile("lern_50_hl6");
 	cout << "\n\n";
 	for(int i=0; i<10; i++){                     //test outputs
 		cout << "=> The falsified " << i << " has been recognized as " << recog[i]+1 << ".\n";
 	}
 	cout << "\n\n";
-
-	system("PAUSE");
 	return 0;
 
 
