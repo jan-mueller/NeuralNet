@@ -35,3 +35,5 @@ public:
 	float *run(float *input);
 	bool train(float *input, float *outputPointer);
 };
+
+#endif

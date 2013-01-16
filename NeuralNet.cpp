@@ -230,7 +230,7 @@ void NeuralNet::setZero(){
 	for(int i=0; i<amountO; i++){
 		inputO[i]=0.0;
 		outputO[i]=0.0;
-		errorTolerance[i]=0.0;
+		errorO[i]=0.0;
 	}
 }
 void NeuralNet::mem_alloc(int input, int hidden, int output){
@@ -283,7 +283,7 @@ void NeuralNet::mem_alloc(int input, int hidden, int output){
 void NeuralNet::backprop(){
 	//Berechnung der Fehlertoleranzen im Output Layer
 	for(int i=0; i<amountO; i++)
-		errorTolerance[i]=differenceO[i]*outputO[i]*(1-outputO[i]);
+		errorO[i]=differenceO[i]*outputO[i]*(1-outputO[i]);
 	//Berechnung der Fehlertoleranzen im Hidden Layer
 	for(int i=0; i<=amountH; i++){
 		for(int j=0; j<amountO; j++)
@@ -294,7 +294,7 @@ void NeuralNet::backprop(){
 	//update der Hidden-Output Schicht Gewichtungsmatrix
 	for(int i=0; i<=amountH; i++)
 		for(int j=0; j<amountO; j++){
-			hoWeightDelta[i][j] = learnRate*errorTolerance[j]*outputH[i] + hoWeightDelta[i][j]*impuls;
+			hoWeightDelta[i][j] = learnRate*errorO[j]*outputH[i] + hoWeightDelta[i][j]*impuls;
 			hoWeight[i][j] = hoWeight[i][j]+hoWeightDelta[i][j];
 		}
 	//update der Input-Hidden Schicht Gewichtungsmatrix

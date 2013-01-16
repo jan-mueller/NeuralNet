@@ -1,5 +1,7 @@
 #include <iostream>
 #include <iomanip>
+#include <stdio.h>
+#include <stdlib.h>
 #include "NeuralNet.h"
 #include "pattern.h"
 
