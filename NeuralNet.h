@@ -1,12 +1,6 @@
 #ifndef _NEURALNET_H_
 #define _NEURALNET_H_
 
-namespace ANN_ERROR{
-	struct file_exception{
-		const char* p;
-		file_exception(const char* q);
-	};
-}
 
 class NeuralNet{
 private:

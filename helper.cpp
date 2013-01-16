@@ -1,5 +1,6 @@
 #include "helper.h"
 
+
 float **generateAsciiArray(char* file, int amount, int height, int width){
 	float **array;
 	array = new float*[amount];
@@ -10,13 +11,14 @@ float **generateAsciiArray(char* file, int amount, int height, int width){
 		array[i] = new float[height*width];
 		for(int j=0; j<height; j++){
 			for(int k=0; k<width; k++){
-				filestream >> array[i][j*7+k];
+				try {
+					filestream >> array[i][j*7+k];
+				} catch (ios_base::failure &) {
+					throw ANN_ERROR::file_exception("Error reading array from file");
+				}
 			}
 		}
 	}
 	filestream.close();
 	return array;
 }
-
-
-

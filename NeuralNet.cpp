@@ -4,6 +4,7 @@
 #include <string>
 #include <fstream>
 #include "NeuralNet.h"
+#include "helper.h"
 
 using namespace std;
 

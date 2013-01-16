@@ -13,9 +13,9 @@ int main(int argc, char** argv){
 	char *percO=new char[20];
 	int recog[10];
 
-	float **trainI = generateAsciiArray("trainI", 10, 9, 7);
-	float **testI = generateAsciiArray("testI", 10, 9, 7);
-	float **trainO = generateAsciiArray("trainO", 10, 1, 9);
+	float **trainI = generateAsciiArray("trainI_numbers", 10, 9, 7);
+	float **testI = generateAsciiArray("testI_numbers", 10, 9, 7);
+	float **trainO = generateAsciiArray("trainO_numbers", 10, 1, 9);
 
 	NeuralNet knn(iL,hL,oL);
 //	NeuralNet knn("lern_10000_hl64");
