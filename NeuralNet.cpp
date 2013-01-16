@@ -7,13 +7,11 @@
 
 using namespace std;
 
-ANN_ERROR::file_exception::file_exception(const char* q) {
-	p = q;
-}
+ANN_ERROR::file_exception::file_exception(const char* q){p = q;}
 
 //Private Methoden
 
-NeuralNet::NeuralNet(int input, int hidden, int output) {
+NeuralNet::NeuralNet(int input, int hidden, int output){
 	mem_alloc(input, hidden, output);
 	srand(time(NULL));
 	//Füllen der Gewichtungsmatrix mit Werten zwischen -0,3 und 0,3
@@ -24,8 +22,7 @@ NeuralNet::NeuralNet(int input, int hidden, int output) {
 		for (int j = 0; j < amountO; j++)
 			hoWeight[i][j] = (float) rand() / RAND_MAX * 0.6 - 0.3;
 }
-NeuralNet::NeuralNet(int input, int hidden, int output, float **inpHidWeight,
-		float **hidOutWeight) {
+NeuralNet::NeuralNet(int input, int hidden, int output, float **inpHidWeight, float **hidOutWeight){
 	mem_alloc(input, hidden, output);
 	srand(time(NULL));
 	//Füllen der Gewichtungsmatrix mit Werten zwischen -0,3 und 0,3
@@ -43,7 +40,7 @@ NeuralNet::NeuralNet(int input, int hidden, int output, float **inpHidWeight,
 		for (int j = 0; j < amountO; j++)
 			hoWeight[i][j] = hidOutWeight[i][j];
 }
-NeuralNet::NeuralNet(char *file) {
+NeuralNet::NeuralNet(char *file){
 	int input, hidden, output;
 	ifstream in(file);
 	if (!in) {
@@ -85,10 +82,30 @@ NeuralNet::NeuralNet(char *file) {
 		}
 	in.close();
 }
-NeuralNet::~NeuralNet() {
+NeuralNet::~NeuralNet(){
+	delete[] preferenceO;
+	delete[] inputI;
+	delete[] inputH;
+	delete[] inputO;
+	delete[] outputI;
+	delete[] outputH;
+	delete[] outputO;
+	delete[] errorH;
+	delete[] errorO;
+	delete[] differenceO;
 
+	for(int i=0; i<=amountI; i++)
+		delete ihWeight[i];
+	for(int i=0; i<=amountH; i++)
+		delete[] hoWeight[i];
+	for(int i=0; i<=amountI; i++)
+		delete[] ihWeightDelta[i];
+	for(int i=0; i<=amountH; i++)
+		delete hoWeightDelta[i];
+	delete[] ihWeight; delete[] hoWeight;
+	delete[] ihWeightDelta; delete[] hoWeightDelta;
 }
-bool NeuralNet::saveWeightsToFile(char *file) {
+bool NeuralNet::saveWeightsToFile(char *file){
 
 }
 float NeuralNet::calculateError() {
@@ -118,10 +135,23 @@ bool NeuralNet::train(float *input, float *outputPointer) {
 
 //Public Methoden
 
-void NeuralNet::setZero() {
-
+void NeuralNet::setZero(){
+	for(int i=0; i<amountI; i++){
+		inputI[i]=0.0;
+		outputI[i]=0.0;
+	}
+	for(int i=0; i<amountH; i++){
+		inputH[i]=0.0;
+		outputH[i]=0.0;
+		errorH[i]=0.0;
+	}
+	for(int i=0; i<amountO; i++){
+		inputO[i]=0.0;
+		outputO[i]=0.0;
+		errorTolerance[i]=0.0;
+	}
 }
-void NeuralNet::mem_alloc(int input, int hidden, int output) {
+void NeuralNet::mem_alloc(int input, int hidden, int output){
 	//Dimensionen des Netzes speichern
 	amountI = input;
 	amountH = hidden;
@@ -168,6 +198,27 @@ void NeuralNet::mem_alloc(int input, int hidden, int output) {
 	//Default Impuls Rate setzen
 	impuls = 0.4;
 }
-void NeuralNet::backprop() {
-
+void NeuralNet::backprop(){
+	//Berechnung der Fehlertoleranzen im Output Layer
+	for(int i=0; i<amountO; i++)
+		errorTolerance[i]=differenceO[i]*outputO[i]*(1-outputO[i]);
+	//Berechnung der Fehlertoleranzen im Hidden Layer
+	for(int i=0; i<=amountH; i++){
+		for(int j=0; j<amountO; j++)
+				errorH[i]+=errorO[j]*hoWeight[i][j];
+		errorH[i]*=outputH[i]*(1-outputH[i]);
+	}
+	//backpropagation nach der Implementierung von "Robert Callan [2003]"
+	//update der Hidden-Output Schicht Gewichtungsmatrix
+	for(int i=0; i<=amountH; i++)
+		for(int j=0; j<amountO; j++){
+			hoWeightDelta[i][j] = learnRate*errorTolerance[j]*outputH[i] + hoWeightDelta[i][j]*impuls;
+			hoWeight[i][j] = hoWeight[i][j]+hoWeightDelta[i][j];
+		}
+	//update der Input-Hidden Schicht Gewichtungsmatrix
+	for(int i=0; i<=amountI; i++)
+		for(int j=0; j<amountH; j++){
+			ihWeightDelta[i][j] = learnRate*errorH[j]*outputI[i] + ihWeightDelta[i][j]*impuls;
+			ihWeight[i][j] = ihWeight[i][j]+ihWeightDelta[i][j];
+		}
 }
