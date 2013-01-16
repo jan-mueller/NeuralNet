@@ -111,7 +111,7 @@ bool NeuralNet::saveWeightsToFile(char *file){
 		throw ANN_ERROR::file_exception("Error opening file");
 		return false;
 	}
-	//throw exception on output failing
+	//Exception wenn Speichern fehlschlägt
 	out.exceptions(ios_base::failbit|ios_base::badbit|ios_base::eofbit);
 	try{
 		out<<amountI<<endl;
@@ -166,7 +166,35 @@ void NeuralNet::setLearnRate(float rate) {
 void NeuralNet::setImpuls(float impuls) {
 	this->impuls=impuls;
 }
-float *NeuralNet::run(float *input) {
+//complete run through the net
+float *NeuralNet::run(float *input){
+	//Matrixen auf 0 setzen
+	setZero();
+	for(int i=0; i<amountI; i++)
+		//Eingangsvektor setzen
+		inputI[i]=input[i];
+	for(int i=0; i<amountI; i++)
+		//Sondefall Input==Output
+		outputI[i]=inputI[i];
+	//Neuron = 1
+	outputI[amountI]=1;
+	for(int i=0; i<amountH; i++)
+		for(int j=0; j<=amountI; j++)
+				//input des hidden Layer
+				inputH[i]+=ihWeight[j][i]*outputI[j];
+	for(int i=0; i<amountH; i++)
+		//Berechnen des Outputs zum Hidden layer
+		outputH[i]=1/(1+exp(-inputH[i]));
+	//Neuron = 1
+	outputH[amountH]=1;
+	for(int i=0; i<amountO; i++)
+		for(int j=0; j<=amountH; j++)
+			//Werte für das Output Layer
+			inputO[i]+=hoWeight[j][i]*outputH[j];
+	for(int i=0; i<amountO; i++)
+		//Berechnen des Outputs für das Output Layer
+		outputO[i]=1/(1+exp(-inputO[i]));
+	return outputO;
 
 }
 bool NeuralNet::train(float *input, float *outputPointer) {
