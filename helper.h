@@ -4,7 +4,7 @@
 #include <fstream>
 
 using namespace std;
-
+//for reading arrays from file
 float** generateAsciiArray(char* file, int amount, int height, int width);
 
 
