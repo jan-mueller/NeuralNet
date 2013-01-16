@@ -197,8 +197,22 @@ float *NeuralNet::run(float *input){
 	return outputO;
 
 }
-bool NeuralNet::train(float *input, float *outputPointer) {
-
+bool NeuralNet::train(float *input, float *outputPointer){
+	bool converge=true;
+	//run
+	run(input);                                 //run forward
+	for(int i=0; i<amountO; i++)
+		//Speichern der erwarteten Ausgabe
+		preferenceO[i]=outputPointer[i];
+	for(int i=0; i<amountO; i++){
+		//Berechnung der Abweichung
+		differenceO[i]=preferenceO[i]-outputO[i];
+		//Überprufen ob die Abweichung im Rahmen liegt
+		if(fabs(differenceO[i])>errorTolerance) converge=false;
+	}
+	// run rückwärts
+	backprop();
+	return converge;
 }
 
 //Public Methoden
